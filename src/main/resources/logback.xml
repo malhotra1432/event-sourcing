@@ -1,0 +1,80 @@
+<configuration>
+
+    <contextName>${HOSTNAME}</contextName>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <timeZone>UTC</timeZone>
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "context": "%contextName",
+                        "logThreadId": "%thread",
+                        "logClass": "%class{32}",
+                        "logMethod": "%method",
+                        "logLevel": "%level",
+                        "relative": "%-4relative",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <maxDepthPerThrowable>10</maxDepthPerThrowable>
+                <maxLength>1024</maxLength>
+                <shortenedClassNameLength>20</shortenedClassNameLength>
+                <exclude>org\.springframework\..*</exclude>
+                <rootCauseFirst>true</rootCauseFirst>
+            </throwableConverter>
+            <includeCallerData>true</includeCallerData>
+        </encoder>
+    </appender>
+
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <timeZone>UTC</timeZone>
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "context": "%contextName",
+                        "logThreadId": "%thread",
+                        "logClass": "%class{32}",
+                        "logMethod": "%method",
+                        "logLevel": "%level",
+                        "relative": "%-4relative",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <maxDepthPerThrowable>10</maxDepthPerThrowable>
+                <maxLength>2048</maxLength>
+                <shortenedClassNameLength>20</shortenedClassNameLength>
+                <exclude>org\.springframework\..*</exclude>
+                <rootCauseFirst>true</rootCauseFirst>
+            </throwableConverter>
+            <includeCallerData>true</includeCallerData>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework.boot" level="info"/>
+
+    <!-- Setting the root level of logging to INFO -->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDERR"/>
+    </root>
+</configuration>

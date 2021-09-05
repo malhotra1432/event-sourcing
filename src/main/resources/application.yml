@@ -1,0 +1,7 @@
+server:
+  tomcat:
+    remoteip:
+      remote-ip-header: x-forwarded-for
+      protocol-header: x-forwarded-proto
+  port: 9999
+  forward-headers-strategy: native
